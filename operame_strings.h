@@ -22,6 +22,8 @@ struct Texts {
         *config_mqtt_server,
         *config_mqtt_port,
         *config_max_failures,
+        *config_mqtt_username,
+        *config_mqtt_password,
         *config_mqtt_topic,
         *config_mqtt_interval,
         *config_mqtt_template,
@@ -69,6 +71,8 @@ bool select(Texts& T, String language) {
         T.config_mqtt_server = "Broker";  // probably should not be translated
         T.config_mqtt_port = "Broker TCP port";
         T.config_max_failures = "Number of failed connections before automatic restart";
+        T.config_mqtt_username = "Username";
+        T.config_mqtt_password = "Password";
         T.config_mqtt_topic = "Topic";  // probably should not be translated
         T.config_mqtt_interval = "Publication interval [s]";
         T.config_mqtt_template = "Message template";
@@ -135,6 +139,8 @@ bool select(Texts& T, String language) {
         T.config_mqtt_server = "Broker";  // zo heet dat in MQTT
         T.config_mqtt_port = "Broker TCP-poort";
         T.config_max_failures = "Aantal verbindingsfouten voor automatische herstart";
+        T.config_mqtt_username = "Gebruikersnaam";
+        T.config_mqtt_password = "Wachtwoord";
         T.config_mqtt_topic = "Topic";  // zo heet dat in MQTT
         T.config_mqtt_interval = "Publicatie-interval [s]";
         T.config_mqtt_template = "Berichtsjabloon";
