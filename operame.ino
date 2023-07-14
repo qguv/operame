@@ -37,8 +37,10 @@ int             co2_critical;
 int             co2_blink;
 String          mqtt_username;
 String          mqtt_password;
-String          mqtt_topic;
-String          mqtt_template;
+String          mqtt_topic_co2;
+String          mqtt_template_co2;
+String          mqtt_topic_temperature;
+String          mqtt_template_temperature;
 bool            add_units;
 bool            wifi_enabled;
 bool            mqtt_enabled;
@@ -282,6 +284,19 @@ void mhz_setup() {
     if (strcmp("0436", v) == 0) mhz_co2_init = 436;
 }
 
+float mhz_get_temperature() {
+    float temperature = mhz.getTemperature();
+
+    if (mhz.errorCode != RESULT_OK) {
+        delay(500);
+        mhz_setup();
+        return -273.15;
+    }
+
+    return temperature;
+}
+
+
 int mhz_get_co2() {
     int co2       = mhz.getCO2();
     int unclamped = mhz.getCO2(false);
@@ -395,9 +410,11 @@ void setup() {
     max_failures  = WiFiSettings.integer("operame_max_failures", 0, 1000, 10, T.config_max_failures);
     mqtt_username = WiFiSettings.string("operame_mqtt_username", "", T.config_mqtt_username);
     mqtt_password = WiFiSettings.string("operame_mqtt_password", "", T.config_mqtt_password);
-    mqtt_topic  = WiFiSettings.string("operame_mqtt_topic", WiFiSettings.hostname, T.config_mqtt_topic);
+    mqtt_topic_co2 = WiFiSettings.string("operame_mqtt_topic_co2", WiFiSettings.hostname, T.config_mqtt_topic_co2);
+    mqtt_topic_temperature = WiFiSettings.string("operame_mqtt_topic_temperature", "temperature", T.config_mqtt_topic_temperature);
+    mqtt_template_co2 = WiFiSettings.string("operame_mqtt_template_co2", "{} PPM", T.config_mqtt_template_co2);
+    mqtt_template_temperature = WiFiSettings.string("operame_mqtt_template_temperature", "{} C", T.config_mqtt_template_temperature);
     mqtt_interval = 1000UL * WiFiSettings.integer("operame_mqtt_interval", 10, 3600, 60, T.config_mqtt_interval);
-    mqtt_template = WiFiSettings.string("operame_mqtt_template", "{} PPM", T.config_mqtt_template);
     WiFiSettings.info(T.config_template_info);
 
     WiFiSettings.onConnect = [] {
@@ -447,10 +464,18 @@ void setup() {
 
 void loop() {
     static int co2;
+    static float temperature;
 
     every(5000) {
         co2 = get_co2();
+        Serial.print("co2: ");
         Serial.println(co2);
+
+        if (driver == MHZ) {
+            temperature = mhz_get_temperature();
+            Serial.print("temperature: ");
+            Serial.println(temperature);
+        }
     }
 
     every(50) {
@@ -469,9 +494,16 @@ void loop() {
         every(mqtt_interval) {
             if (co2 <= 0) break;
             connect_mqtt();
-            String message = mqtt_template;
-            message.replace("{}", String(co2));
-            retain(mqtt_topic, message);
+
+            String message_co2 = mqtt_template_co2;
+            message_co2.replace("{}", String(co2));
+            retain(mqtt_topic_co2, message_co2);
+
+            if (driver == MHZ) {
+                String message_temperature = mqtt_template_temperature;
+                message_temperature.replace("{}", String(temperature));
+                retain(mqtt_topic_temperature, message_temperature);
+            }
         }
     }
 

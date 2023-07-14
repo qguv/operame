@@ -24,9 +24,11 @@ struct Texts {
         *config_max_failures,
         *config_mqtt_username,
         *config_mqtt_password,
-        *config_mqtt_topic,
+        *config_mqtt_topic_co2,
+        *config_mqtt_template_co2,
+        *config_mqtt_topic_temperature,
+        *config_mqtt_template_temperature,
         *config_mqtt_interval,
-        *config_mqtt_template,
         *config_template_info,
         *connecting,
         *wait
@@ -73,9 +75,11 @@ bool select(Texts& T, String language) {
         T.config_max_failures = "Number of failed connections before automatic restart";
         T.config_mqtt_username = "Username";
         T.config_mqtt_password = "Password";
-        T.config_mqtt_topic = "Topic";  // probably should not be translated
+        T.config_mqtt_topic_co2 = "Topic (CO2)";  // probably should not be translated
+        T.config_mqtt_template_co2 = "Message template (CO2)";
+        T.config_mqtt_topic_temperature = "Topic (temperature)";  // probably should not be translated
+        T.config_mqtt_template_temperature = "Message template (temperature)";
         T.config_mqtt_interval = "Publication interval [s]";
-        T.config_mqtt_template = "Message template";
         T.config_template_info = "The {} in the template is replaced by the measurement value.";
         T.connecting = "Connecting to WiFi...";
         T.portal_instructions = {
@@ -141,9 +145,11 @@ bool select(Texts& T, String language) {
         T.config_max_failures = "Aantal verbindingsfouten voor automatische herstart";
         T.config_mqtt_username = "Gebruikersnaam";
         T.config_mqtt_password = "Wachtwoord";
-        T.config_mqtt_topic = "Topic";  // zo heet dat in MQTT
+        T.config_mqtt_topic_co2 = "Topic (CO2)";  // zo heet dat in MQTT
+        T.config_mqtt_template_co2 = "Berichtsjabloon (CO2)";
+        T.config_mqtt_topic_temperature = "Topic (temperatuur)";  // zo heet dat in MQTT
+        T.config_mqtt_template_temperature = "Berichtsjabloon (temperatuur)";
         T.config_mqtt_interval = "Publicatie-interval [s]";
-        T.config_mqtt_template = "Berichtsjabloon";
         T.config_template_info = "De {} in het sjabloon wordt vervangen door de gemeten waarde.";
         T.connecting = "Verbinden met WiFi...";
         T.portal_instructions = {
