@@ -54,7 +54,7 @@ void retain(const String& topic, const String& message) {
 void clear_sprite(int bg = TFT_BLACK) {
     sprite.fillSprite(bg);
     if (WiFi.status() == WL_CONNECTED) {
-        sprite.drawRect(0, 0, display.width(), display.height(), TFT_BLUE);
+        sprite.drawRect(0, 0, display.width(), display.height(), TFT_RED);
     }
 }
 
